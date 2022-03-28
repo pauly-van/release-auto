@@ -2,17 +2,17 @@
 
 import subprocess, os, json
 
-subprocess.call("yts discover", shell=True)
+#subprocess.call("yts discover", shell=True)
 
 def id():
-  with open('/home/pauly/.local/share/yts_server/devices.json', 'r') as file:
+  with open('/Users/paulnguyen/Library/Preferences/yts_server/devices.json', 'r') as file:
     data = json.load(file)
     if data == []:
       raise ValueError('No devices were found to test CLI commands')
     return data[0]['shortId']
   
 def ytsVersion():
-  os.chdir('/home/pauly') 
+  os.chdir('/Users/paulnguyen') 
   os.system("curl -O -L https://dev.yts.devicecertification.youtube/yts_server.zip; rm -rf yts_server; unzip yts_server.zip -d yts_server")
   cliVer = subprocess.check_output("yts --version", shell=True)
   actual = subprocess.check_output("curl http://dev.yts.devicecertification.youtube/version", shell=True)
@@ -34,6 +34,6 @@ def ytsStop():
 
 def ytsTest():
   ID = id()
-  output = subprocess.check_output("yts test %s 'DOM CSS Tests'" % (ID), shell=True)
-  print(output.decode('UTF-8'))
+  output = subprocess.check_output("yts test %s 'DOM CSS Tests CSS Media Rule CSSMediaRule.cssRules'" % (ID), shell=True)
+  return output[len(output)-49:]
 
