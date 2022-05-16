@@ -10,30 +10,52 @@ def id():
     if data == []:
       raise ValueError('No devices were found to test CLI commands')
     return data[0]['shortId']
+
+ID = id()
   
-def ytsVersion():
+def yts_version():
   os.chdir('/Users/paulnguyen') 
   os.system("curl -O -L https://dev.yts.devicecertification.youtube/yts_server.zip; rm -rf yts_server; unzip yts_server.zip -d yts_server")
   cliVer = subprocess.check_output("yts --version", shell=True)
   actual = subprocess.check_output("curl http://dev.yts.devicecertification.youtube/version", shell=True)
   return cliVer.decode('UTF-8')[4:len(cliVer)-1], actual.decode('UTF-8')[0:]
 
-def ytsDiscover():
+def yts_discover():
   devices = subprocess.check_output("yts discover", shell=True)
   return devices.decode('UTF-8')[:21]
 
-def ytsLaunch():
-  output = subprocess.check_output("yts launch %s 'https://www.youtube.com/tv?v=9szn1QQfas'" % (id()), shell=True)  
+def yts_launch():
+  output = subprocess.check_output(f"yts launch {ID} 'https://www.youtube.com/tv?v=9szn1QQfas'", shell=True)  
   return output.decode('UTF-8')[0:19]
 
-def ytsStop():
-  ID = id()
-  subprocess.call("yts launch %s ''" % (ID), shell=True)
-  output = subprocess.check_output("yts stop %s" % (ID), shell=True)
+def yts_stop():
+  subprocess.call(f"yts launch {ID} ''", shell=True)
+  output = subprocess.check_output(f"yts stop {ID}", shell=True)
   return output.decode('UTF-8')[0:17]
 
-def ytsTest():
-  ID = id()
-  output = subprocess.check_output("yts test %s 'DOM CSS Tests CSS Media Rule CSSMediaRule.cssRules'" % (ID), shell=True)
+def yts_test():
+  output = subprocess.check_output(f"yts test {ID} 'DOM CSS Tests CSS Media Rule CSSMediaRule.cssRules'", shell=True)
   return output[len(output)-49:]
 
+def yts_list():
+  output = subprocess.check_output("yts list", shell=True)
+  return output.decode("UTF-8")[len(output)-21:len(output)-1]
+
+def yts_cert():
+  output = subprocess.check_output(f"yts cert {ID} 'DOM CSS Tests CSS Rule List CSSRuleList.item' --rerun", shell=True)
+  return output.decode("UTF-8")[len(output)-51:]
+
+def yts_login():
+  pass
+
+def yts_user():
+  pass
+
+def yts_credits():
+  pass
+
+def yts_update():
+  pass
+
+def yts_evergreen():
+  pass
