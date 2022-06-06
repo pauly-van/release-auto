@@ -35,7 +35,7 @@ def yts_stop():
 
 def yts_test():
   output = subprocess.check_output(f"yts test {ID} 'DOM CSS Tests CSS Media Rule CSSMediaRule.cssRules'", shell=True)
-  return output[len(output)-49:]
+  return output.decode('UTF-8')[len(output)-51:len(output)-31]
 
 def yts_list():
   output = subprocess.check_output("yts list", shell=True)
@@ -43,7 +43,7 @@ def yts_list():
 
 def yts_cert():
   output = subprocess.check_output(f"yts cert {ID} 'DOM CSS Tests CSS Rule List CSSRuleList.item' --rerun", shell=True)
-  return output.decode("UTF-8")[len(output)-51:]
+  return output.decode("UTF-8")[len(output)-45:len(output)-19]
 
 def yts_login():
   pass
@@ -55,7 +55,11 @@ def yts_credits():
   pass
 
 def yts_update():
-  pass
+  current_version = subprocess.check_output('yts --version', shell=True)
+  subprocess.call('yts update', shell=True)
+  # this will revert back to prod version
+  updated_version = subprocess.check_output('yts --version', shell=True)
+  return (current_version, updated_version)
 
-def yts_evergreen():
+def yts_evergreen_channel_and_update():
   pass
