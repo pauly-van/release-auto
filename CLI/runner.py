@@ -7,9 +7,11 @@ import tests
 
 
 class TestCliCommands(unittest.TestCase):
+
     def test_version_cmd(self):
         versions = tests.yts_version()
         self.assertEqual(versions[0], versions[1])
+
 
     def test_discover_cmd(self):
         path = Path(
@@ -19,11 +21,12 @@ class TestCliCommands(unittest.TestCase):
             'Searching for devices',
             "Discover command failed to search for devices") and path.is_file()
 
+
     def test_launch_cmd(self):
         self.assertEqual(
             tests.yts_launch(),
             'Launch request sent',
-            "Launch command did not execute successfully")
+            "Lanch command did not execute successfully")
 
     def test_stop_cmd(self):
         self.assertEqual(
