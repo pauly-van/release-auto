@@ -103,7 +103,8 @@ def yts_login():
     pass
 
 def yts_user():
-    pass
+    user = subprocess.run(["yts", "user"], capture_output=True)
+    return user.returncode
 
 #Credits
 def yts_credits():
@@ -111,8 +112,8 @@ def yts_credits():
     output = re.search(r"https://www.npmjs.com/*", credit.stdout.decode())
     return output != None
 
-def yts_list_returncode_options():
-    list = subprocess.run(["yts", "test", f"{ID}", "--verbose", "--colors"], capture_output=True)
+def yts_credits_returncode_options():
+    list = subprocess.run(["yts", "credits"], capture_output=True)
     return list.returncode
 
 #Update

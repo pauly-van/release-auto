@@ -66,8 +66,13 @@ class TestCliCertCmd(unittest.TestCase):
         self.assertTrue(os.path.isfile("/home/doughfactory/cert_test.json"))
 
 class TestCliLoginCmd(unittest.TestCase):
-    def test_login_user_cmd(self):
+    #need to figure how to do this automated as it asks to continue login on browser
+    def test_login_cmd(self):
         pass
+
+class TestCliUserCmd(unittest.TestCase):
+    def test_user_cmd(self):
+        self.assertIs(tests.yts_user(), 0)
 
 class TestCliCreditsCmd(unittest.TestCase):
     def test_credits_cmd(self):
