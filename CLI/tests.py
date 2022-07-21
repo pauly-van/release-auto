@@ -1,8 +1,7 @@
 #! /usr/bin/python3
 
-import subprocess
-import os
-import json
+import subprocess, os, json, sys, re
+from tkinter import W
 
 #comment out for testing, uncomment when everything functioning
 #subprocess.call("yts discover", shell=True)
@@ -15,10 +14,9 @@ def id():
             raise ValueError('No devices were found to test CLI commands')
         return data[0]['shortId']
 
-
 ID = id()
 
-
+#Version
 def yts_version():
     os.chdir('/Users/paulnguyen')
     os.system("curl -O -L https://dev.yts.devicecertification.youtube/yts_server.zip; rm -rf yts_server; unzip yts_server.zip -d yts_server")
@@ -27,55 +25,97 @@ def yts_version():
         "curl http://dev.yts.devicecertification.youtube/version", shell=True)
     return cliVer.decode('UTF-8')[4:len(cliVer) -1], actual.decode('UTF-8')[0:]
 
-
+#Discover
 def yts_discover():
-    devices = subprocess.check_output("yts discover", shell=True)
-    return devices.decode('UTF-8')[:21]
+    discover = subprocess.run(["yts", "discover"], capture_output=True)
+    output = re.search(r"\(\w\w\w?\)", discover.stdout.decode())
+    return output != None
 
+def yts_discover_return_options():
+    discover = subprocess.run(["yts", "discover", "--verbose", "--colors", "--timeout=5"], capture_output=True)
+    return discover.returncode
 
+#Launch
 def yts_launch():
-    output = subprocess.check_output(
-        f"yts launch {ID} 'https://www.youtube.com/tv?v=9szn1QQfas'", shell=True)
-    return output.decode('UTF-8')[0:19]
+    launch = subprocess.run(["yts", "launch", f"{ID}", "'https://www.youtube.com/tv?v=9szn1QQfas'"], capture_output=True)
+    output = re.search(r"Launch request sent", launch.stdout.decode())
+    return output != None
 
+def yts_launch_returncode_options():
+    launch = subprocess.run(["yts", "launch", f"{ID}", "'https://www.youtube.com/tv?v=9szn1QQfas'", "--verbose", "colors"], capture_output=True)
+    return launch.returncode
 
+#Stop
 def yts_stop():
     subprocess.call(f"yts launch {ID} ''", shell=True)
-    output = subprocess.check_output(f"yts stop {ID}", shell=True)
-    return output.decode('UTF-8')[0:17]
+    stop = subprocess.run(["yts", "stop", f"{ID}"], capture_output=True)
+    output = re.search(r"Stop request sent", stop.stdout.decode())
+    return output != None
 
+def yts_stop_returncode_options():
+    launch = subprocess.run(["yts", "launch", f"{ID}", "--verbose", "colors"], capture_output=True)
+    return launch.returncode
 
+#Test
 def yts_test():
-    output = subprocess.check_output(
-        f"yts test {ID} 'DOM CSS Tests CSS Media Rule CSSMediaRule.cssRules'",
-        shell=True)
-    return output.decode('UTF-8')[len(output) - 51:len(output) - 31]
+    test = subprocess.run(["yts", "test", f"{ID}", "'DOM CSS Tests CSS Media Rule CSSMediaRule.cssRules'"], capture_output=True)
+    output = re.search(r"Executed 1 of 1 test", test.stdout.decode()) 
+    return output != None
+    
+def yts_test_returncode_options():
+    # need to add all other options (--module, --filter, --skip, --ports, --year, --program, --no-cap, --verticals)
+    os.chdir("/home/doughfactory/")
+    test = subprocess.run(["yts", "test", f"{ID}", "--verbose", "--colors", "--retry-failed=2", "--json-output='test.json'"], capture_output=True)
+    return test.returncode
 
-
+#List
 def yts_list():
-    output = subprocess.check_output("yts list", shell=True)
-    return output.decode("UTF-8")[len(output) - 21:len(output) - 1]
+    list = subprocess.run(["yts", "list"], capture_output=True)
+    output = re.search(r"Listed.*tests(s)", list.stdout.decode())
+    return output != None
 
+def yts_list_returncode_options():
+    # need to add all other options (--module, --filter, --skip, --ports, --year, --program, --no-cap, --verticals)
+    os.chdir("/home/doughfactory/")
+    list = subprocess.run(["yts", "test", f"{ID}", "--verbose", "--colors", "--retry-failed=2", "--json-output='list_test.json'"], capture_output=True)
+    return list.returncode
 
+def yts_list_num():
+    list = subprocess.run(["yts", "test", f"{ID}"], capture_output=True)
+    output = re.search(r"1350", list.stdout.decode())
+    return output != None
+
+#Cert
 def yts_cert():
-    output = subprocess.check_output(
-        f"yts cert {ID} 'DOM CSS Tests CSS Rule List CSSRuleList.item' --rerun",
-        shell=True)
-    return output.decode("UTF-8")[len(output) - 45:len(output) - 19]
+    # need to add all other options (--module, --filter, --skip, --ports, --year, --program, --no-cap, --verticals)
+    cert = subprocess.run(["yts", "cert", f"{ID}", "'DOM CSS Tests CSS Rule List CSSRuleList.item'", "--rerun"], capture_output=True)
+    output = re.search(r"Executed", cert.stdout.decode())
+    return output != None
 
+def yts_list_returncode_options():
+    # need to add all other options (--test-version, --filter, --skip, --ports, --upload/submit, --program, --no-cap, --verticals)
+    os.chdir("/home/doughfactory/")
+    list = subprocess.run(["yts", "test", f"{ID}", "--verbose", "--retry-failed=2", "--json-output='cert_test.json'"], capture_output=True)
+    return list.returncode
 
+#Login/User
 def yts_login():
     pass
-
 
 def yts_user():
     pass
 
-
+#Credits
 def yts_credits():
-    pass
+    credit = subprocess.run(["yts", "credits"], capture_output=True)
+    output = re.search(r"https://www.npmjs.com/*", credit.stdout.decode())
+    return output != None
 
+def yts_list_returncode_options():
+    list = subprocess.run(["yts", "test", f"{ID}", "--verbose", "--colors"], capture_output=True)
+    return list.returncode
 
+#Update
 def yts_update():
     current_version = subprocess.check_output('yts --version', shell=True)
     subprocess.call('yts update', shell=True)
@@ -83,6 +123,6 @@ def yts_update():
     updated_version = subprocess.check_output('yts --version', shell=True)
     return (current_version, updated_version)
 
-
+#Evergreen
 def yts_evergreen_channel_and_update():
     pass
