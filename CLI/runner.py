@@ -13,10 +13,10 @@ class TestCliDiscoverCmd(unittest.TestCase):
         self.assertTrue(tests.yts_discover())
 
     def test_discover_returncode(self):
-        self.assertIs(tests.yts_discover_return(), 0)
+        self.assertIs(tests.yts_discover_return_options(), 0)
 
     def test_discover_creates_devices_file(self):
-        self.assertTrue(os.path.isfile("/home/doughfactory/.local/share/yts_server/devices.json"))
+        self.assertTrue(os.path.isfile("/Users/kasatkina/Library/Preferences/yts_server/configs.json"))
 
 class TestCliLaunchCmd(unittest.TestCase):
     def test_launch_cmd(self):
@@ -31,7 +31,7 @@ class TestCliStopCmd(unittest.TestCase):
     
     def test_stop_returncode(self):
         self.assertIs(tests.yts_stop_returncode_options(), 0)
-
+        
 class TestCliTestCmd(unittest.TestCase):
     def test_test_cmd(self):
         self.assertTrue(tests.yts_test())
@@ -40,22 +40,21 @@ class TestCliTestCmd(unittest.TestCase):
         self.assertIs(tests.yts_test_returncode_options(), 0)
     
     def test_test_json_output(self):
-        self.assertTrue(os.path.isfile("/home/doughfactory/test.json"))
+        self.assertTrue(os.path.isfile("/Users/kasatkina/test.json"))
 
 class TestCliListCmd(unittest.TestCase):
     def test_list_cmd(self):
         self.assertTrue(tests.yts_list())
 
     def test_list_returncode_options(self):
-        self.assertIs(tests.yts_list_returncode_options(), 1)
+        self.assertIs(tests.yts_list_returncode_options(), 0)
 
     def test_list_num_of_tests(self):
         self.assertTrue(tests.yts_list_num())
 
     def test_list_json_output(self):
-        self.assertTrue(os.path.isfile("/home/doughfactory/list_test.json"))
+        self.assertTrue(os.path.isfile("/Users/kasatkina/list_test.json"))
 
-"""
 class TestCliCertCmd(unittest.TestCase):
     def test_cert_cmd(self):
         self.assertTrue(tests.yts_cert())
@@ -64,9 +63,7 @@ class TestCliCertCmd(unittest.TestCase):
         self.assertIs(tests.yts_cert_returncode_options(), 0)
 
     def test_cert_json_output(self):
-        self.assertTrue(os.path.isfile("/home/doughfactory/cert_test.json"))
-
-"""
+        self.assertTrue(os.path.isfile("/Users/kasatkina/cert_test.json"))
 class TestCliLoginCmd(unittest.TestCase):
     #need to figure how to do this automated as it asks to continue login on browser
     def test_login_cmd(self):
@@ -94,7 +91,6 @@ class TestCliUpdateCmd(unittest.TestCase):
 class TestCliEvergreenChannelCmd(unittest.TestCase):
     def test_evergreen_channel_cmd(self):
         pass
-
 
 if __name__ == '__main__':
     unittest.main()

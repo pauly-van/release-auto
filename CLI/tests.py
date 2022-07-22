@@ -2,11 +2,12 @@
 
 import subprocess, os, json, sys, re
 
-ID = "dial:10.0.0.2"
+subprocess.call("yts discover", shell=True)
+ID = input("Enter short ID of device to use: ")
 
 #Version
 def yts_version():
-    os.chdir('/Users/paulnguyen')
+    os.chdir('/Users/kasatkina')
     os.system("curl -O -L https://dev.yts.devicecertification.youtube/yts_server.zip; rm -rf yts_server; unzip yts_server.zip -d yts_server")
     cliVer = subprocess.check_output("yts --version", shell=True)
     actual = subprocess.check_output(
@@ -30,7 +31,7 @@ def yts_launch():
     return output != None
 
 def yts_launch_returncode_options():
-    launch = subprocess.run(["yts", "launch", f"{ID}", "'https://www.youtube.com/tv?v=9szn1QQfas'", "--verbose", "colors"], capture_output=True)
+    launch = subprocess.run(["yts", "launch", f"{ID}", "'https://www.youtube.com/tv?v=9szn1QQfas'", "--verbose", "--colors"], capture_output=True)
     return launch.returncode
 
 #Stop
@@ -41,7 +42,8 @@ def yts_stop():
     return output != None
 
 def yts_stop_returncode_options():
-    launch = subprocess.run(["yts", "launch", f"{ID}", "--verbose", "colors"], capture_output=True)
+    subprocess.call(f"yts launch {ID} ''", shell=True)
+    launch = subprocess.run(["yts", "stop", f"{ID}", "--verbose", "--colors"], capture_output=True)
     return launch.returncode
 
 #Test
@@ -52,24 +54,24 @@ def yts_test():
     
 def yts_test_returncode_options():
     # need to add all other options (--module, --filter, --skip, --ports, --year, --program, --no-cap, --verticals)
-    os.chdir("/home/doughfactory/")
-    test = subprocess.run(["yts", "test", f"{ID}", "--verbose", "--colors", "--retry-failed=2", "--json-output='test.json'"], capture_output=True)
+    os.chdir("/Users/kasatkina")
+    test = subprocess.run(["yts", "test", f"{ID}", "'DOM CSS Tests CSS Media Rule CSSMediaRule.cssRules'", "--verbose", "--colors", "--retry-failed=2", "--json-output='test.json'"], capture_output=True)
     return test.returncode
 
 #List
 def yts_list():
     list = subprocess.run(["yts", "list"], capture_output=True)
-    output = re.search(r"Listed.*tests(s)", list.stdout.decode())
+    output = re.search(r"Listed", list.stdout.decode())
     return output != None
 
 def yts_list_returncode_options():
     # need to add all other options (--module, --filter, --skip, --ports, --year, --program, --no-cap, --verticals)
-    os.chdir("/home/doughfactory/")
-    list = subprocess.run(["yts", "test", f"{ID}", "--verbose", "--colors", "--retry-failed=2", "--json-output='list_test.json'"], capture_output=True)
+    os.chdir("/Users/kasatkina")
+    list = subprocess.run(["yts", "list", "--verbose", "--colors", "--json-output='list_test.json'"], capture_output=True)
     return list.returncode
 
 def yts_list_num():
-    list = subprocess.run(["yts", "test", f"{ID}"], capture_output=True)
+    list = subprocess.run(["yts", "list"], capture_output=True)
     output = re.search(r"1350", list.stdout.decode())
     return output != None
 
@@ -80,14 +82,15 @@ def yts_cert():
     output = re.search(r"Executed", cert.stdout.decode())
     return output != None
 
-def yts_list_returncode_options():
+def yts_cert_returncode_options():
     # need to add all other options (--test-version, --filter, --skip, --ports, --upload/submit, --program, --no-cap, --verticals)
-    os.chdir("/home/doughfactory/")
-    list = subprocess.run(["yts", "test", f"{ID}", "--verbose", "--retry-failed=2", "--json-output='cert_test.json'"], capture_output=True)
+    os.chdir("/Users/kasatkina/")
+    list = subprocess.run(["yts", "cert", f"{ID}", "'DOM CSS Tests CSS Rule List CSSRuleList.item'", "--verbose", "--retry-failed=2", "--json-output='cert_test.json'", "--rerun"], capture_output=True)
     return list.returncode
 
 #Login/User
 def yts_login():
+    # need to figure out a way to test this as you need to login on browser
     pass
 
 def yts_user():
@@ -106,6 +109,7 @@ def yts_credits_returncode_options():
 
 #Update
 def yts_update():
+    # this will only pass if you're using pre-release update
     current_version = subprocess.check_output('yts --version', shell=True)
     subprocess.call('yts update', shell=True)
     # this will revert back to prod version
