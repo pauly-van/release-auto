@@ -55,6 +55,7 @@ class TestCliListCmd(unittest.TestCase):
     def test_list_json_output(self):
         self.assertTrue(os.path.isfile("/home/doughfactory/list_test.json"))
 
+"""
 class TestCliCertCmd(unittest.TestCase):
     def test_cert_cmd(self):
         self.assertTrue(tests.yts_cert())
@@ -65,6 +66,7 @@ class TestCliCertCmd(unittest.TestCase):
     def test_cert_json_output(self):
         self.assertTrue(os.path.isfile("/home/doughfactory/cert_test.json"))
 
+"""
 class TestCliLoginCmd(unittest.TestCase):
     #need to figure how to do this automated as it asks to continue login on browser
     def test_login_cmd(self):
@@ -78,7 +80,7 @@ class TestCliCreditsCmd(unittest.TestCase):
     def test_credits_cmd(self):
         self.assertTrue(tests.yts_credits())
     
-    def test_cert_returncode(self):
+    def test_credit_returncode(self):
         self.assertIs(tests.yts_cert_returncode_options(), 0)
 
 class TestCliUpdateCmd(unittest.TestCase):

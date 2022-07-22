@@ -1,20 +1,8 @@
 #! /usr/bin/python3
 
 import subprocess, os, json, sys, re
-from tkinter import W
 
-#comment out for testing, uncomment when everything functioning
-#subprocess.call("yts discover", shell=True)
-
-
-def id():
-    with open('/Users/paulnguyen/Library/Preferences/yts_server/devices.json', 'r') as file:
-        data = json.load(file)
-        if data == []:
-            raise ValueError('No devices were found to test CLI commands')
-        return data[0]['shortId']
-
-ID = id()
+ID = "dial:10.0.0.2"
 
 #Version
 def yts_version():
